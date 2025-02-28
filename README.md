@@ -16,23 +16,22 @@ The LLVM pass in [MyLLVMPass.cpp](MyLLVMPass.cpp) iterates through all the funct
 
 The Clang pass, in [MyClangAction.cpp](MyClangAction.cpp) implements an `ASTFrontendAction` to traverse the AST of the code and print the span of each function. This relies on a chain of three classes. `ASTFrontendAction -> ASTConsumer -> RecursiveASTVisitor`. This is linked with Clang system libraries to build an executable file.
 
-```sh
-export LLVM_DIR="<your path here>"
-```
+Now let's build the project.
 
 ```sh
+export LLVM_DIR="<your path here>"
 mkdir build && cd build
 cmake ..
 make
 ```
 
-Add the build directory to PATH and LD_LIBRARY_PATH
+This should produce `libMyLLVMPass.so` and `clang-action`. Add the build directory to PATH and LD_LIBRARY_PATH.
 ```sh
 export PATH="$(pwd):$PATH"
 export LD_LIBRARY_PATH="$(pwd):$LD_LIBRARY_PATH"
 ```
 
-Run the Clang frontend action on a single file:
+First, we run the Clang frontend action on a single file:
 ```sh
 cd ../example
 clang-action arithmetic.c --
