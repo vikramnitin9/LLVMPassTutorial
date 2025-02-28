@@ -1,5 +1,5 @@
 # LLVMPassTutorial
-Writing an LLVM pass and a Clang frontend action without having to build LLVM from source.
+Compiling an LLVM pass and a Clang frontend action without having to build LLVM from source.
 
 ```sh
 sudo apt update
@@ -11,6 +11,10 @@ llvm-config --version
 clang --version
 ```
 The passes may have to change slightly based on your LLVM/Clang version, so keep that in mind too.
+
+The LLVM pass in [MyLLVMPass.cpp](MyLLVMPass.cpp) iterates through all the functions in the module and prints the functions called by each function. We *dynamically* register this pass with the name `my-pass` so that `opt` can find it. Notice that we also have to register the `CallGraphAnalysis` pass so that we can use it as part of our custom pass. This compiles into a `.so` library which can be dynamically linked with LLVM system libraries.
+
+The Clang pass, in [MyClangAction.cpp](MyClangAction.cpp) implements an `ASTFrontendAction` to traverse the AST of the code and print the span of each function. This relies on a chain of three classes. `ASTFrontendAction -> ASTConsumer -> RecursiveASTVisitor`. This is linked with Clang system libraries to build an executable file.
 
 ```sh
 export LLVM_DIR="<your path here>"
